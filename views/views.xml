@@ -1,6 +1,148 @@
 <odoo>
   <data>
   
+    <!-- VIEWS: "Order Booking"
+  
+      - Model·········: souq.booking
+      - _rec_name·····: name
+      - Domain········: []
+      - Context·······: {}
+      - Parent menu ··: base.menu_custom
+      - View priority·: 10    
+      - Sequence····..: 10
+      - Action help···: Something 
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  
+  <!-- Tree view for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="view_souq_booking_tree" model="ir.ui.view">
+      <field name="name">view.souq.booking.tree</field>
+      <field name="model">souq.booking</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <tree string="souq_booking_tree" create="1" delete="1" edit="1">
+              <field name="name" />
+              <field name="date" />
+              <field name="requester_id" />
+              <field name="state" />
+  
+          </tree>
+      </field>
+  </record>
+    <record id="view_souq_booking_search" model="ir.ui.view">
+      <field name="name">view.souq.booking.search</field>
+      <field name="model">souq.booking</field>
+      <field name="type">search</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <search string="souq_booking_search">
+              <field name="name" />
+              
+          </search>
+      </field>
+  </record>
+
+  <record id="action_order_booking_all_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Order Booking</field>
+      <field name="res_model">souq.booking</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">new</field>
+      <field name="context">{'default_order_id': active_id}</field>
+      <field name="search_view_id" ref="view_souq_booking_search" />
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click to make new Booking
+          </p><p>
+          </p>
+      </field>
+  </record>
+  <!-- Form view for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="view_souq_booking_form" model="ir.ui.view">
+      <field name="name">view.souq.booking.form</field>
+      <field name="model">souq.booking</field>
+      <field name="type">form</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <form string="souq_booking_form" create="1" delete="1" edit="1">
+              <header>
+              
+              <field name="state" widget="statusbar" invisible="1"/>
+              
+              <button name="submit_booking" string="Submit" type="object" class="oe_highlight" 
+              attrs="{ 'invisible':[('state', '!=', 'draft')] }"
+              />
+              <button name="accept_booking" string="Accept" type="object" class="oe_highlight" 
+              attrs="{ 'invisible':[('state', '!=', 'submitted')] }"
+              />
+              <button name="reject_booking" string="Reject" type="object" class="oe_highlight" 
+              attrs="{ 'invisible':[('state', '!=', 'submitted')] }"
+              />
+              
+              <field name="state" widget="statusbar"/>
+              
+              </header>
+              <sheet>
+                  <div class="oe_title">
+                      <label for="name" class="oe_edit_only" />
+                      <h1>
+                          <field name="name" class="oe_inline"
+                              placeholder="Name" />
+                      </h1>
+                  </div>
+
+                  <group>
+                    
+                    <field name="delivery_status" 
+                    readonly="1"
+                    />
+                    <field name="date" readonly="1"/>
+                    <field name="requester_id"  readonly="1"/>
+                    <field name="requester_location" 
+                    attrs="{ 'invisible':[('delivery_status', '=', True)] }"
+                    />
+                    <field name="notes" />
+                    
+                  </group>
+              </sheet>
+          </form>
+      </field>
+  </record>
+  
+  <!-- Search view for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  
+  <!-- Main window action for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="action_order_booking_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Order Booking</field>
+      <field name="res_model">souq.booking</field>
+      <field name="view_mode">form</field>
+      <field name="view_type">form</field>
+      <field name="target">new</field>
+      <field name="context">{'default_order_id': active_id}</field>
+      <field name="search_view_id" ref="view_souq_booking_search" />
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click to make new Booking
+          </p><p>
+          </p>
+      </field>
+  </record>
+  
+  
+  <!-- Main menu for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- <record id="menu_" model="ir.ui.menu" >
+      <field name="name">\1\1\1\1\1\1\1\1\1\1\1\1\1</field>
+      <field name="sequence" eval="\1\1" />
+      <field name="action" ref="action_(?2:\ls)(?3:\_)(?2:\lo)(?3:\_)(?2:\lu)(?3:\_)(?2:\lq)(?3:\_)(?2:\l)(?3:\_)(?2:\lb)(?3:\_)(?2:\lo)(?3:\_)(?2:\lo)(?3:\_)(?2:\lk)(?3:\_)(?2:\li)(?3:\_)(?2:\ln)(?3:\_)(?2:\lg)(?3:\_)_act_window" />
+      <field name="parent_id" ref="\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1" />
+  </record> -->
+
+
   <!-- VIEWS: "Souq Order Views"
   
       - Model·········: souq.order
@@ -42,6 +184,20 @@
           <form string="souq\_order_form" create="1" delete="1" edit="1">
               <header>
               
+              <field name="state" invisible="1" widget="statusbar"/>
+              
+              <button name="publish_order" string="Publish" type="object" class="oe_highlight"
+                
+                attrs="{ 'invisible':[('state', '!=', 'draft')] }"
+                />
+              
+              <button name="%(action_order_booking_act_window)d"
+                      string="Book Order"
+                      type="action"
+                      default_focus="0"
+                      class="oe_highlight"
+                      help="Meh" />
+              
               <field name="state" widget="statusbar"/>
               
               </header>
@@ -53,6 +209,17 @@
                               placeholder="Name" />
                       </h1>
                   </div>
+                  <div name="buttons" class="oe_right oe_button_box">
+                    <button id="button_id" 
+                      name="%(action_order_booking_all_act_window)d"
+                      type="action"
+                      class="oe_stat_button"
+                      icon="fa-tasks"
+                      help="view Bookings info"
+                      context="{'default_order_id':active_id}">
+                      <field name="num_booking" string="Bookings" widget="statinfo"/>
+                    </button>
+                    </div>
                   <group>
                   
                   <field name="date" readonly="1"/>
@@ -86,10 +253,10 @@
 
               </sheet>
               <footer>
-        <div class="oe_chatter">
-            <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-            <field name="message_ids" widget="mail_thread"/>
-        </div>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
               </footer>
           </form>
       </field>
@@ -134,6 +301,8 @@
       <field name="name">Souq Orders</field>
       <field name="action" ref="action_souq_order_act_window" />
   </record>
+
+  
 
   </data>
 </odoo>
