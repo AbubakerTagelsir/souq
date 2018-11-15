@@ -3,24 +3,23 @@
     'name': "souq",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Demo for Online platform to trade various Products between end-userss""",
 
     'description': """
-        Long description of module's purpose
+        this module is for Learning Purposes only
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Palmyra Solutions",
+    'website': "http://www.palmyra-it.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Uncategorized',
+    'category': 'E-commerce',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'sale'],
 
     # always loaded
     'data': [
@@ -32,4 +31,5 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'application':True,
 }

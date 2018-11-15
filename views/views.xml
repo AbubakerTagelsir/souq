@@ -1,60 +1,139 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-    <!--
-    <record model="ir.ui.view" id="souq.list">
-      <field name="name">souq list</field>
-      <field name="model">souq.souq</field>
+  
+  <!-- VIEWS: "Souq Order Views"
+  
+      - Model·········: souq.order
+      - _rec_name·····: name
+      - Domain········: []
+      - Context·······: \{}
+      - Parent menu ··: base.menu_custom
+      - View priority·: 16    
+      - Sequence····..: 10
+      - Action help···: Demo for online Trade 
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  
+  <!-- Tree view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="view_souq_order_tree" model="ir.ui.view">
+      <field name="name">view.souq.order.tree</field>
+      <field name="model">souq.order</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
       <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
+          <tree create="1" delete="1" edit="1">
+              <field name="name" />
+              <field name="date" />
+              <field name="user_id" />
+              <field name="state" />
+  
+          </tree>
       </field>
-    </record>
-    -->
+  </record>
+  
+  <!-- Form view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="view_souq_order_form" model="ir.ui.view">
+      <field name="name">view.souq.order.form</field>
+      <field name="model">souq.order</field>
+      <field name="type">form</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <form string="souq\_order_form" create="1" delete="1" edit="1">
+              <header>
+              
+              <field name="state" widget="statusbar"/>
+              
+              </header>
+              <sheet>
+                  <div class="oe_title">
+                      <label for="name" class="oe_edit_only" />
+                      <h1>
+                          <field name="name" class="oe_inline"
+                              placeholder="Name" />
+                      </h1>
+                  </div>
+                  <group>
+                  
+                  <field name="date" readonly="1"/>
+                  <field name="user_id" readonly="1"/>
+                  <field name="payment_method" />
+                  <field name="delivery" />
+                  <field name="pickup_location" 
+                  attrs="{ 'invisible':[('delivery', '=', True)] }"
+                  />
 
-    <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="souq.action_window">
-      <field name="name">souq window</field>
-      <field name="res_model">souq.souq</field>
+                  
+                  
+                  </group>
+                  <field name="order_lines" widget="one2many_list">
+                    <tree editable="bottom">
+                      
+                      <field name="product_id" />
+                      <field name="qty" />
+                      <field name="unit_price" />
+                      <field name="used_duration" />
+                      
+                    </tree>
+                  </field>
+                    <!-- <div class="oe_title oe_right"> -->
+                      <label for="total_price" class="oe_edit_only" />
+                      <h1>
+                          <field name="total_price" class="oe_inline"
+                              placeholder="Total Price" readonly="1"/>
+                      </h1>
+                  <!-- </div> -->
+
+              </sheet>
+              <footer>
+        <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+            <field name="message_ids" widget="mail_thread"/>
+        </div>
+              </footer>
+          </form>
+      </field>
+  </record>
+  
+  <!-- Search view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="view_souq_order_search" model="ir.ui.view">
+      <field name="name">view.souq.order.search</field>
+      <field name="model">souq.order</field>
+      <field name="type">search</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <search string="souq_order_search">
+              <field name="name" />
+              
+          </search>
+      </field>
+  </record>
+  
+  <!-- Main window action for "\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="action_souq_order_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Souq Order</field>
+      <field name="res_model">souq.order</field>
       <field name="view_mode">tree,form</field>
-    </record>
-    -->
-
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="souq.action_server">
-      <field name="name">souq server</field>
-      <field name="model_id" ref="model_souq_souq"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
+      <field name="view_type">form</field>
+      <field name="target">current</field>
+      <field name="domain"></field>
+      <field name="context"></field>
+      <field name="search_view_id" ref="view_souq_order_search" />
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click to add new Order
+          </p><p>
+          </p>
       </field>
-    </record>
-    -->
+  </record>
+  
+  <!-- Main menu for "\1\1\1\1\1\1\1\1\1\1" -->
+  <record id="menu_souq_order_root" model="ir.ui.menu" >
+      <field name="name">Souq Orders</field>
+      <field name="action" ref="action_souq_order_act_window" />
+  </record>
 
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="souq" id="souq.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="souq.menu_1" parent="souq.menu_root"/>
-    <menuitem name="Menu 2" id="souq.menu_2" parent="souq.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="souq.menu_1_list" parent="souq.menu_1"
-              action="souq.action_window"/>
-    <menuitem name="Server to list" id="souq" parent="souq.menu_2"
-              action="souq.action_server"/>
-    -->
   </data>
 </odoo>
