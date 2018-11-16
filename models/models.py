@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
+
 
 class SouqOrder(models.Model):
     _name = 'souq.order'
@@ -43,6 +45,7 @@ class SouqOrder(models.Model):
             total += line.unit_price * line.qty
         self.total_price = total
 
+
     #NOT WORKING????
     @api.onchange('bookings')
     def get_the_number_of_bookings(self):
@@ -66,6 +69,21 @@ class SouqOrder(models.Model):
         self.state = 'canceled'
 
 
+    def view_order_bookings(self):
+        
+        context = {'order_id': self.id, },
+        # view_id = self.ref('souq.')
+        return {
+            'name': 'Order Bookings',
+            'type': 'ir.actions.act_window',
+            'view_type': 'tree',
+            'view_mode': 'list',
+            'res_model': 'souq.booking',
+            'domain': [('order_id', '=', self.id)],
+            'context': context,
+            'target': 'new',
+        }
+        
 
 
 
@@ -88,7 +106,7 @@ class OrderBooking(models.Model):
     order_id = fields.Many2one('souq.order', "Order")
     delivery_status = fields.Boolean('Delivery Status', related="order_id.delivery")
     requester_id = fields.Many2one('res.users', "Requester", default=lambda self: self.env.user)
-    state = fields.Selection([('draft', 'Draft'), ('submitted', "Submitted"), ('accepted', "Accepted"), ('rejected', "Rejected")], default='draft')
+    state = fields.Selection([('draft', 'Draft'), ('submitted', "Submitted"), ('accepted', "Accepted"), ('rejected', "Rejected"), ('confirmed', "Confirmed")], default='draft')
     date = fields.Datetime("Date", default=fields.Datetime.now)
     notes = fields.Text("Notes")
     requester_location = fields.Char("Requester Location")
@@ -101,8 +119,43 @@ class OrderBooking(models.Model):
         self.state = 'submitted'
 
     def accept_booking(self):
-        self.state = 'accepted'
+        if self.order_id.state == 'available':
+            self.order_id.state = 'booked'
+            self.state = 'accepted'
+        else:
+            raise UserError("This order is already booked to another user")
+            
 
     def reject_booking(self):
+        if self.state=='accepted':
+            self.order_id.state = 'available'
         self.state = 'rejected'
-        
+
+    def confirm_booking(self):
+        self.state = 'confirmed'
+        self.order_id.state = 'sold'
+        new_so = self.env['sale.order'].create({
+            'partner_id':self.requester_id.partner_id.id,
+            'date_order':fields.Datetime.now(),
+            'souq_order_id':self.order_id.id,
+        })
+        for line in self.order_id.order_lines:
+            self.env['sale.order.line'].create({
+                'product_id':line.product_id.id,
+                'product_uom_qty':float(line.qty),
+                'price_unit':line.unit_price,
+                'order_id':new_so.id,
+            })
+
+class SaleOrder(models.Model):
+    
+    _inherit = ['sale.order']
+    souq_order_id = fields.Many2one('souq.order', "Reference")
+    pickup_location = fields.Char("Pickup Location", help="City - Area - Street")
+    requester_location = fields.Char("Requester Location")
+    payment_method = fields.Selection(
+        string='Payment Method',
+        selection=[('cash', 'Cash'), ('bank', 'Bank')]
+    )
+
+    delivery = fields.Boolean("Delivery?")
