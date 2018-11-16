@@ -27,8 +27,9 @@ class SouqOrder(models.Model):
     related='user_id.phone',
     )
     pickup_location = fields.Char("Pickup Location", help="City - Area - Street")
-    total_price = fields.Float("Total Price", compte="_get_the_total_price")
-    num_booking = fields.Integer("Total Bookings", compte="get_the_number_of_bookings")
+    total_price = fields.Float("Total Price", compute="_get_the_total_price")
+    bookings = fields.One2many('souq.booking','order_id')
+    num_booking = fields.Integer("Total Bookings", compute="get_the_number_of_bookings")
     
     @api.one
     def _get_name(self):
@@ -42,14 +43,30 @@ class SouqOrder(models.Model):
             total += line.unit_price * line.qty
         self.total_price = total
 
+    #NOT WORKING????
+    @api.onchange('bookings')
     def get_the_number_of_bookings(self):
-        t = 0
-        t = len(self.env['souq.booking'].search([('order_id', '=', self.id)]).ids)
-        print(t)
-        self.num_booking = t
-        return t
+    	print("------------------")
+    	print("------------------")
+    	print("------------------")
+    	print("inside function")
+    	print("------------------")
+    	t = 0
+    	n_bookings = self.env['souq.booking'].search([])
+    	for b in n_bookings:
+    		if b.order_id.id == self.id:
+    			t +=1
+    	self.num_booking = t
+    	return t
+        
     def publish_order(self):
         self.state = 'available'
+
+    def cancel_order(self):
+        self.state = 'canceled'
+
+
+
 
 
 class SouqOrderLine(models.Model):
