@@ -33,6 +33,21 @@ class SouqOrder(models.Model):
     bookings = fields.One2many('souq.booking','order_id')
     num_booking = fields.Integer("Total Bookings", compute="get_the_number_of_bookings")
     
+
+    @api.one
+    def _get_my_orders(self):
+        orders=self.search[()]
+        myorders = []
+        for order in orders:
+            if order.user_id == self.env.user.id:
+                myorders.append(order)
+        
+        return myorders
+     
+         
+
+
+
     @api.one
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)

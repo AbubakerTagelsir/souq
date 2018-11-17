@@ -207,6 +207,7 @@
         <kanban create="1" delete="1" edit="1">>
             <templates>
                 <t t-name="kanban-box">
+                 <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                     <div class="oe_resource_vignette">
                         <div class="oe_resource_image">
                             <a type="edit"></a>
@@ -220,7 +221,8 @@
                                <li><field name="state"/> </li>                                 
                              </ul>
                         </div>
-                    </div>                     
+                    </div>  
+                 </div>                     
                 </t>
             </templates>
         </kanban>
@@ -420,15 +422,16 @@
      <!-- Main window action for my order -->
   <record id="action_my_order_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
-      <field name="name">my order</field>
+      <field name="name">my orders</field>
       <field name="res_model">souq.order</field>
       <field name="view_mode">list</field>
       <field name="view_type">tree</field>
       <field name="target">new</field>
+      <field name="domain">[('user_id', '=', uid)]</field>
       <!-- <field name="context">{'default_order_id': order_id}</field> -->
 
   </record>
-   <menuitem name="My Order" id="my_order_menu" action="action_my_order_act_window"/>
+   <menuitem name="My Orders" id="my_order_menu" parent="menu_souq_order_root" action="action_my_order_act_window"/>
 
 
 
@@ -436,20 +439,20 @@
 
 
 
-  <!-- Tree view for the profile 
+  <!-- Tree view for the profile -->
   <record id="view_profile_tree" model="ir.ui.view">
-      <field name="name">view.my.order.tree</field>
+      <field name="name">view.profile.tree</field>
       <field name="model">souq.order</field>
       <field name="type">tree</field>
       <field name="mode">primary</field>
       <field name="active" eval="True" />
       <field name="arch" type="xml">
           <tree create="1" delete="1" edit="1">
-              <field name="name" />
+              <field name="user_id" />
+              <field name="phone" />
           </tree>
       </field>
-  </record> -->
-
+  </record> 
 <!-- Form view for the profile -->
   <!-- <record id="view_souq_booking_form" model="ir.ui.view">
       <field name="name">view.souq.booking.form</field>
@@ -466,8 +469,7 @@
           </form>
       </field>
   </record> -->
-
-     <!-- Main window action for the profile
+     Main window action for the profile
   <record id="action_profile_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
       <field name="name">profile</field>
@@ -475,10 +477,45 @@
       <field name="view_mode">list</field>
       <field name="view_type">tree</field>
       <field name="target">new</field>
-     <field name="context">{'default_order_id': order_id}</field> -->
-<!-- 
+      <field name="context">{'default_order_id': order_id}</field>
+ 
+
   </record>
-   <menuitem name="Profile" id="profile_menu" action="action_profile_act_window"/>  -->
+   <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
+
+
+
+
+
+
+
+  <!-- Tree view for the products -->
+  <record id="view_product_tree" model="ir.ui.view">
+      <field name="name">view.product.tree</field>
+      <field name="model">souq.order.line</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <tree create="1" delete="1" edit="1">
+              <field name="product_id" />
+          </tree>
+      </field>
+  </record> -->
+
+     <!--Main window action for the product-->
+  <record id="action_product_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">product</field>
+      <field name="res_model">souq.order.line</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">new</field>
+     <!-- <field name="context">{'default_order_id': order_id}</field> -->
+  </record>
+   <menuitem name="Product" id="product_menu" parent="menu_souq_order_root" action="action_product_act_window"/> 
+
+
 
   </data>
 </odoo>
