@@ -14,6 +14,7 @@
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   
   <!-- Tree view for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  
   <record id="view_souq_booking_tree" model="ir.ui.view">
       <field name="name">view.souq.booking.tree</field>
       <field name="model">souq.booking</field>
@@ -244,6 +245,11 @@
                 attrs="{ 'invisible':[('state', '!=', 'draft')] }"
                 />
               
+              <button name="cancel_order" string="Cancel" type="object" class="oe_highlight"
+                
+                attrs="{ 'invisible':[('state', '=', 'draft, available')] }"
+                />
+              
               <button name="%(action_order_booking_act_window)d"
                       string="Book Order"
                       type="action"
@@ -453,50 +459,7 @@
       <field name="active" eval="True" />
       <field name="arch" type="xml">
           <form string="souq_booking_form" create="1" delete="1" edit="1">
-              <header>
-              
-              <field name="state" widget="statusbar" invisible="1"/>
-              
-              <button name="submit_booking" string="Submit" type="object" class="oe_highlight" 
-              attrs="{ 'invisible':[('state', '!=', 'draft')] }"
-              />
-              <button name="accept_booking" string="Accept" type="object" class="oe_highlight" 
-              attrs="{ 'invisible':[('state', '!=', 'submitted')] }"
-              />
-              <button name="reject_booking" string="Reject" type="object" class="oe_highlight" 
-              attrs="{ 'invisible':[('state', 'not in', ['submitted','accepted'])] }"
-              />
-              <button name="confirm_booking" string="Confirm" type="object" class="oe_highlight" 
-              attrs="{ 'invisible':[('state', '!=', 'accepted')] }"
-              />
-             
-              <field name="state" widget="statusbar"/>
-              
-              </header>
-              <sheet>
-                  <div class="oe_title">
-                      <label for="name" class="oe_edit_only" />
-                      <h1>
-                          <field name="name" class="oe_inline"
-                              placeholder="Name" />
-                      </h1>
-                  </div>
-
                   <group>
-                    
-                    <field name="delivery_status" 
-                    readonly="1"
-                    />
-                    <field name="order_id" readonly="1"/>
-                    <field name="date" readonly="1"/>
-                    <field name="requester_id"  readonly="1"/>
-                    <field name="requester_location" 
-                    attrs="{ 
-                    'invisible':[('delivery_status', '!=', True)],
-                    'required':[('delivery_status', '=', True)],
-                     }"
-                    />
-                    <field name="notes" />
                     
                   </group>
               </sheet>
