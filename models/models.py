@@ -13,6 +13,9 @@ class SouqOrder(models.Model):
         comodel_name='souq.order.line',
         inverse_name='order_id',
     )
+
+    order_pic = fields.Binary("Image" , attachment=True)
+
     user_id = fields.Many2one('res.users', "Seller", default=lambda self: self.env.user)
     payment_method = fields.Selection(
         string='Payment Method',
