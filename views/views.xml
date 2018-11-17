@@ -262,7 +262,7 @@
               
               <button name="cancel_order" string="Cancel" type="object" class="oe_highlight"
                 
-                attrs="{ 'invisible':[('state', '=', 'draft, available')] }"
+                attrs="{ 'invisible':[('state', 'not in', ['available'])] }"
                 />
               
               <button name="%(action_order_booking_act_window)d"
@@ -270,6 +270,7 @@
                       type="action"
                       default_focus="0"
                       class="oe_highlight"
+                      attrs="{ 'invisible':[('state', 'not in', ['available'])] }"
                       help="Meh" />
               
               <field name="state" widget="statusbar"/>
@@ -284,14 +285,6 @@
                       </h1>
                   </div>
                   <div name="buttons" class="oe_right oe_button_box">
-                    <!-- <button id="button_id" 
-                      name="%(action_order_booking_all_act_window)d"
-                      type="action"
-                      class="oe_stat_button"
-                      icon="fa-tasks"
-                      help="view Bookings info">
-                      <field name="num_booking" string="Bookings" widget="statinfo"/>
-                    </button> -->
                     <button id="button_id" 
                       name="view_order_bookings"
                       type="object"

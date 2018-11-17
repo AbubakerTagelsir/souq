@@ -67,11 +67,6 @@ class SouqOrder(models.Model):
     #NOT WORKING????
     @api.onchange('bookings')
     def get_the_number_of_bookings(self):
-    	print("------------------")
-    	print("------------------")
-    	print("------------------")
-    	print("inside function")
-    	print("------------------")
     	t = 0
     	n_bookings = self.env['souq.booking'].search([])
     	for b in n_bookings:
@@ -95,7 +90,7 @@ class SouqOrder(models.Model):
             'name': 'Order Bookings',
             'type': 'ir.actions.act_window',
             'view_type': 'tree',
-            'view_mode': 'list',
+            'view_mode': 'list,form',
             'res_model': 'souq.booking',
             'domain': [('order_id', '=', self.id)],
             'context': context,
@@ -103,6 +98,18 @@ class SouqOrder(models.Model):
         }
         
 
+    def view_followed_orders(self, res_id, partner_id, model):
+    	context = cr.execute("select y.res_id from res_partner as x, mail_followers as y where y.partner_id = x.id and y.res_model = 'souq.order';")
+    	return {
+            'name': 'Followed Orders',
+            'type': 'ir.actions.act_window',
+            'view_type': 'kanban',
+            'view_mode': 'kanban,list,form',
+            'res_model': 'souq.order',
+            'domain': [('user_id', '=', self.user_id)],
+            'context': context,
+            'target': 'current',
+        }
 
 
 class SouqOrderLine(models.Model):
