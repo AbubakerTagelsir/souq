@@ -22,14 +22,11 @@
       <field name="mode">primary</field>
       <field name="active" eval="True" />
       <field name="arch" type="xml">
-
           <tree string="souq_booking_tree" create="1" delete="1" edit="1">
               <field name="name" />
               <field name="date" />
               <field name="requester_id" />
-
-              <field name="state" />      
-  
+              <field name="state" />
               <!-- <field name="state" widget="statusbar" invisible="1"/> -->
               
               <button name="submit_booking" string="Submit" type="object" class="oe_highlight" 
@@ -67,7 +64,7 @@
       <field name="type">ir.actions.act_window</field>
       <field name="name">Order Booking</field>
       <field name="res_model">souq.booking</field>
-      <field name="view_mode">list,form</field>
+      <field name="view_mode">list</field>
       <field name="view_type">tree</field>
       <field name="target">new</field>
       <!-- <field name="context">{'default_order_id': active_id}</field> -->
@@ -141,7 +138,7 @@
   
   <!-- Search view for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
   
-  <!-- Main window action for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Main window action for order booking -->
   <record id="action_order_booking_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
       <field name="name">Order Booking</field>
@@ -182,7 +179,7 @@
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   
   <!-- Tree view for "\1\1\1\1\1\1\1\1\1\1" -->
-  <record id="view_souq_order_tree" model="ir.ui.view">
+  <!-- <record id="view_souq_order_tree" model="ir.ui.view">
       <field name="name">view.souq.order.tree</field>
       <field name="model">souq.order</field>
       <field name="type">tree</field>
@@ -197,7 +194,40 @@
   
           </tree>
       </field>
-  </record>
+  </record> -->
+    <!-- the kanban view for Orders -->
+<record model="ir.ui.view" id="resource_kanban_view">
+    <field name="name">view.soug.orders.</field>
+    <field name="model">souq.order</field>
+    <field name="type">kanban</field>
+    <field name="mode">primary</field>
+    <field name="active" eval="True" />
+    <field name="arch" type="xml">
+    
+        <kanban create="1" delete="1" edit="1">>
+            <templates>
+                <t t-name="kanban-box">
+                 <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                    <div class="oe_resource_vignette">
+                        <div class="oe_resource_image">
+                            <a type="edit"></a>
+                            <!-- <img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/> -->
+                        </div>
+                        <div class="oe_resource_details">
+                            <ul>
+                               <li><field name="name"/></li>
+                               <li><field name="date"/></li>
+                               <li><field name="user_id"/></li>
+                               <li><field name="state"/> </li>                                 
+                             </ul>
+                        </div>
+                    </div>  
+                 </div>                     
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>  
   
   <!-- Form view for "\1\1\1\1\1\1\1\1\1\1" -->
   <record id="view_souq_order_form" model="ir.ui.view">
@@ -216,7 +246,7 @@
                 
                 attrs="{ 'invisible':[('state', '!=', 'draft')] }"
                 />
-
+              
               <button name="cancel_order" string="Cancel" type="object" class="oe_highlight"
                 
                 attrs="{ 'invisible':[('state', '=', 'draft, available')] }"
@@ -227,9 +257,7 @@
                       type="action"
                       default_focus="0"
                       class="oe_highlight"
-                      help="Meh"
-                      attrs="{ 'invisible':[('state', '!=', 'available')] }"
-                       />
+                      help="Meh" />
               
               <field name="state" widget="statusbar"/>
               
@@ -248,11 +276,7 @@
                       type="action"
                       class="oe_stat_button"
                       icon="fa-tasks"
-
-                      help="view Bookings info"
-                      context="{'default_order_id':active_id}">
-
-
+                      help="view Bookings info">
                       <field name="num_booking" string="Bookings" widget="statinfo"/>
                     </button> -->
                     <button id="button_id" 
@@ -274,8 +298,6 @@
                   attrs="{ 'invisible':[('delivery', '=', True)] }"
                   />
 
-                  
-                  
                   </group>
                   <field name="order_lines" widget="one2many_list">
                     <tree editable="bottom">
@@ -326,7 +348,7 @@
       <field name="type">ir.actions.act_window</field>
       <field name="name">Souq Order</field>
       <field name="res_model">souq.order</field>
-      <field name="view_mode">tree,form</field>
+      <field name="view_mode">kanban,form</field>
       <field name="view_type">form</field>
       <field name="target">current</field>
       <field name="domain"></field>
@@ -362,8 +384,7 @@
       <field name="arch" type="xml">
           
           <field name="payment_term_id" 
-          position="replace"
-          >
+          position="replace">
           
           <field name="souq_order_id" readonly="1"/>
           <field name="payment_method" readonly="1"/>
@@ -379,8 +400,122 @@
           
       </field>
   </record>
+
+   <!-- Tree view for my order -->
+  <record id="view_my_order_tree" model="ir.ui.view">
+      <field name="name">view.my.order.tree</field>
+      <field name="model">souq.order</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <tree create="1" delete="1" edit="1">
+              <field name="name" />
+              <field name="date" />
+              <field name="user_id" />
+              <field name="state" />
   
-  
+          </tree>
+      </field>
+  </record>
+
+     <!-- Main window action for my order -->
+  <record id="action_my_order_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">my orders</field>
+      <field name="res_model">souq.order</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">new</field>
+      <field name="domain">[('user_id', '=', uid)]</field>
+      <!-- <field name="context">{'default_order_id': order_id}</field> -->
+
+  </record>
+   <menuitem name="My Orders" id="my_order_menu" parent="menu_souq_order_root" action="action_my_order_act_window"/>
+
+
+
+
+
+
+
+  <!-- Tree view for the profile -->
+  <record id="view_profile_tree" model="ir.ui.view">
+      <field name="name">view.profile.tree</field>
+      <field name="model">souq.order</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <tree create="1" delete="1" edit="1">
+              <field name="user_id" />
+              <field name="phone" />
+          </tree>
+      </field>
+  </record> 
+<!-- Form view for the profile -->
+  <!-- <record id="view_souq_booking_form" model="ir.ui.view">
+      <field name="name">view.souq.booking.form</field>
+      <field name="model">souq.booking</field>
+      <field name="type">form</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <form string="souq_booking_form" create="1" delete="1" edit="1">
+                  <group>
+                    
+                  </group>
+              </sheet>
+          </form>
+      </field>
+  </record> -->
+     Main window action for the profile
+  <record id="action_profile_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">profile</field>
+      <field name="res_model">souq.order</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">new</field>
+      <field name="context">{'default_order_id': order_id}</field>
+ 
+
+  </record>
+   <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
+
+
+
+
+
+
+
+  <!-- Tree view for the products -->
+  <record id="view_product_tree" model="ir.ui.view">
+      <field name="name">view.product.tree</field>
+      <field name="model">souq.order.line</field>
+      <field name="type">tree</field>
+      <field name="mode">primary</field>
+      <field name="active" eval="True" />
+      <field name="arch" type="xml">
+          <tree create="1" delete="1" edit="1">
+              <field name="product_id" />
+          </tree>
+      </field>
+  </record> -->
+
+     <!--Main window action for the product-->
+  <record id="action_product_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">product</field>
+      <field name="res_model">souq.order.line</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">new</field>
+     <!-- <field name="context">{'default_order_id': order_id}</field> -->
+  </record>
+   <menuitem name="Product" id="product_menu" parent="menu_souq_order_root" action="action_product_act_window"/> 
+
+
 
   </data>
 </odoo>
