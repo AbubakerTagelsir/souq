@@ -87,6 +87,7 @@ class SouqOrderLine(models.Model):
 
 
 class OrderBooking(models.Model):
+    
     _name = 'souq.booking'
     name = fields.Char("Name", compute="_get_name")
     order_id = fields.Many2one('souq.order', "Order")
