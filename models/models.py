@@ -183,14 +183,14 @@ class SaleOrder(models.Model):
     delivery = fields.Boolean("Delivery?")
 
 
-# class Partner(models.Model):
-#     _inherit = ['res.partner']
-#     related_user_id = fields.Many2one('res.users', compute="_get_user_id", store=1)
+class Partner(models.Model):
+    _inherit = ['res.partner']
+    related_user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
 
-#     def _get_user_id(self):
-#         self.related_user_id = self.env['res.users'].search([
-#             ('partner_id', '=', self.id)
-#         ])
+    def _get_user_id(self):
+        self.related_user_id = self.env['res.users'].search([
+            ('partner_id', '=', self.id)
+        ])
 
 # class User(models.Model):
     
