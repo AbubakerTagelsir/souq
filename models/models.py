@@ -185,13 +185,20 @@ class SaleOrder(models.Model):
 
 class Partner(models.Model):
     _inherit = ['res.partner']
-    related_user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
-
+    related_user_id = fields.Many2one('res.partner', default=lambda self: self.env.user.partner_id)
+    cc = fields.Boolean(
+        string=u'cc',
+        default=lambda self: self._get_cc
+    )
+    
     def _get_user_id(self):
         self.related_user_id = self.env['res.users'].search([
             ('partner_id', '=', self.id)
         ])
-
+    @api.one
+    def _get_cc(self):
+        if self.id == self.related_user_id:
+            self.cc = True
 # class User(models.Model):
     
 #     _inherit = ['res.users']

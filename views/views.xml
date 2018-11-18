@@ -494,7 +494,8 @@
       <field name="view_mode">form</field>
       <field name="view_type">form</field>
       <field name="target">current</field>
-      <!-- <field name="context">{'id', '=', 'related_user_id.partner_id.id')]}</field> -->
+      <field name="domain">[('cc', '=', True)]</field>
+      <!-- <field name="res_id" eval="1"></field> -->
   </record>
    <menuitem name="My Profile" id="profile_menu" sequence="10" parent="menu_souq_order_root" action="action_profile_act_window"/>
 
