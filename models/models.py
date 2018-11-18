@@ -13,6 +13,9 @@ class SouqOrder(models.Model):
         comodel_name='souq.order.line',
         inverse_name='order_id',
     )
+
+    order_pic = fields.Binary("Image" , attachment=True)
+
     user_id = fields.Many2one('res.users', "Seller", default=lambda self: self.env.user)
     payment_method = fields.Selection(
         string='Payment Method',
@@ -52,6 +55,8 @@ class SouqOrder(models.Model):
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)
 
+        
+    @api.one
     @api.onchange('order_lines')
     def _get_the_total_price(self): 
         print(self)   
