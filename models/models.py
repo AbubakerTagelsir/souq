@@ -55,18 +55,18 @@ class SouqOrder(models.Model):
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)
 
-        
-    @api.one
+
+    @api.multi
     @api.onchange('order_lines')
     def _get_the_total_price(self): 
         print(self)   
         total = 0.00
-        for line in self.order_lines:
-            total += line.unit_price * line.qty
-        self.total_price = total
+        for i in self:
+            for line in i.order_lines:
+                total += line.unit_price * line.qty
+            i.total_price = total
 
 
-    #NOT WORKING????
     @api.onchange('bookings')
     def get_the_number_of_bookings(self):
     	t = 0
