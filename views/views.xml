@@ -209,16 +209,29 @@
                 <t t-name="kanban-box">
                  <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                     <div class="oe_resource_vignette">
-                        <div class="oe_resource_image">
+                            <!-- <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('product.template', 'image_small', record.id.raw_value)"/>
+                                </div> -->
+
+                        <!-- <div class="oe_resource_image">
                             <a type="edit"></a>
-                            <!-- <img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/> -->
-                        </div>
+                            <img t-att-src="kanban_image('souq.order', 'image_small', record.id.value)" class="oe_resource_picture"/>
+                        </div> -->
+
+                        <!-- <div class="o_kanban_image">
+                            <t t-if="record.image.raw_value">
+                            <img t-att-src="kanban_image('souq.order', 'image_medium', record.id.raw_value)"/>
+                             </t>
+                        </div> -->
+
                         <div class="oe_resource_details">
                             <ul>
+                               <!-- <li><field name="order_pic"/></li> -->
                                <li><field name="name"/></li>
-                               <li><field name="date"/></li>
-                               <li><field name="user_id"/></li>
-                               <li><field name="state"/> </li>                                 
+                               <li><field name="state"/> </li> 
+                               <!-- <li><field name="total_price"/> </li>   -->
+                               <!-- <field name='id'/> -->
+
                              </ul>
                         </div>
                     </div>  
@@ -432,56 +445,6 @@
 
 
 
-  <!-- Tree view for the profile -->
-  <record id="view_profile_tree" model="ir.ui.view">
-      <field name="name">view.profile.tree</field>
-      <field name="model">souq.order</field>
-      <field name="type">tree</field>
-      <field name="mode">primary</field>
-      <field name="active" eval="True" />
-      <field name="arch" type="xml">
-          <tree create="1" delete="1" edit="1">
-              <field name="user_id" />
-              <field name="phone" />
-          </tree>
-      </field>
-  </record> 
-<!-- Form view for the profile -->
-  <!-- <record id="view_souq_booking_form" model="ir.ui.view">
-      <field name="name">view.souq.booking.form</field>
-      <field name="model">souq.booking</field>
-      <field name="type">form</field>
-      <field name="mode">primary</field>
-      <field name="active" eval="True" />
-      <field name="arch" type="xml">
-          <form string="souq_booking_form" create="1" delete="1" edit="1">
-                  <group>
-                    
-                  </group>
-              </sheet>
-          </form>
-      </field>
-  </record> -->
-     Main window action for the profile
-  <record id="action_profile_act_window" model="ir.actions.act_window">
-      <field name="type">ir.actions.act_window</field>
-      <field name="name">profile</field>
-      <field name="res_model">souq.order</field>
-      <field name="view_mode">list</field>
-      <field name="view_type">tree</field>
-      <field name="target">new</field>
-      <field name="context">{'default_order_id': order_id}</field>
- 
-
-  </record>
-   <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
-
-
-
-
-
-
-
   <!-- Tree view for the products -->
   <record id="view_product_tree" model="ir.ui.view">
       <field name="name">view.product.tree</field>
@@ -494,19 +457,32 @@
               <field name="product_id" />
           </tree>
       </field>
-  </record> -->
+  </record> 
 
      <!--Main window action for the product-->
-  <record id="action_product_act_window" model="ir.actions.act_window">
+  <!-- <record id="action_product_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
       <field name="name">product</field>
       <field name="res_model">souq.order.line</field>
       <field name="view_mode">list</field>
       <field name="view_type">tree</field>
-      <field name="target">new</field>
+      <field name="target">new</field> -->
      <!-- <field name="context">{'default_order_id': order_id}</field> -->
+  <!-- </record> -->
+   <menuitem name="Product" id="product_menu" parent="menu_souq_order_root" action="product.product_template_action"/> 
+
+
+     <!-- Main window action for the profile -->
+  <record id="action_profile_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">profile</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">form</field>
+      <field name="view_type">form</field>
+      <field name="target">current</field>
+      <field name="domain">[]</field>
   </record>
-   <menuitem name="Product" id="product_menu" parent="menu_souq_order_root" action="action_product_act_window"/> 
+   <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
 
 
 
