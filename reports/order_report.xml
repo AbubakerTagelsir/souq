@@ -1,0 +1,67 @@
+<odoo>
+ <report
+    id="orderreport"
+    model="souq.order"
+    string="Souq Order Report"
+    report_type="qweb-pdf"
+    name="souq.order_report_template"
+    file="souq.order_report_template"/>
+    <template id="order_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                       <center> <h1>Souq Order</h1></center>
+                        
+                        
+                          <!-- <img class="img img-responsive" src="/sale_order_report/static/src/img/.png" align="right"/> -->
+                          
+
+                        <table style="width:100%">
+                            <tr> 
+                            <td>user name</td>
+                            <td><span t-field="o.name"/></td>
+                             </tr>
+
+                            <tr> 
+                            <td>payment method</td>
+                            <td><span t-field="o.payment_method"/></td>
+                             </tr>
+
+                            <tr> 
+                            <td>Order state</td>
+                            <td><span t-field="o.state"/></td>
+                             </tr>
+
+                             <tr> 
+                            <td>Order Date</td>
+                            <td><span t-field="o.date"/></td>
+                             </tr>
+
+                            <tr> 
+                            <td>phone number</td>
+                            <td><span t-field="o.phone"/></td>
+                             </tr>
+
+                            <tr> 
+                            <td>total price</td>
+                            <td><span t-field="o.total_price"/></td>
+                            </tr>
+
+                            <tr> 
+                            <td>number of bookings</td>
+                            <td><span t-field="o.num_booking"/></td>
+                            </tr>
+                        
+                           
+                        </table>
+<!-- <p>Picture of the order <span t-field="o.order_pic"/></p> -->
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

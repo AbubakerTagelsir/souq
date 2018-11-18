@@ -100,12 +100,13 @@ class SouqOrder(models.Model):
         }
         
 
-    def view_followed_orders(self):
-        myorders = self.env['souq.order'].search([('id', 'in', [x.res_id for x in self.env['mail.followers'].search([
-            ('res_model', '=', 'souq.order'),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])])])
-        return myorders.ids
+
+    # def view_followed_orders(self):
+    #     myorders = self.env['souq.order'].search([('id', 'in', [x.res_id for x in self.env['mail.followers'].search([
+    #         ('res_model', '=', 'souq.order'),
+    #         ('partner_id', '=', self.env.user.partner_id.id),
+    #         ])])])
+    #     return myorders.ids
 
 class SouqOrderLine(models.Model):
     _name = 'souq.order.line'
@@ -180,3 +181,23 @@ class SaleOrder(models.Model):
     )
 
     delivery = fields.Boolean("Delivery?")
+
+
+# class Partner(models.Model):
+#     _inherit = ['res.partner']
+#     related_user_id = fields.Many2one('res.users', compute="_get_user_id", store=1)
+
+#     def _get_user_id(self):
+#         self.related_user_id = self.env['res.users'].search([
+#             ('partner_id', '=', self.id)
+#         ])
+
+# class User(models.Model):
+    
+#     _inherit = ['res.users']
+
+#     @api.onchange('partner_id')
+#     def check_user_partner_relation(self):
+#         if self.partner_id:
+#             self.partner_id.related_user_id = self.id
+    
