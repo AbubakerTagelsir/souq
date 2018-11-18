@@ -95,19 +95,12 @@ class SouqOrder(models.Model):
         }
         
 
-    def view_followed_orders(self, res_id, partner_id, model):
-    	context = cr.execute("select y.res_id from res_partner as x, mail_followers as y where y.partner_id = x.id and y.res_model = 'souq.order';")
-    	return {
-            'name': 'Followed Orders',
-            'type': 'ir.actions.act_window',
-            'view_type': 'kanban',
-            'view_mode': 'kanban,list,form',
-            'res_model': 'souq.order',
-            'domain': [('user_id', '=', self.user_id)],
-            'context': context,
-            'target': 'current',
-        }
-
+    def view_followed_orders(self):
+        myorders = self.env['souq.order'].search([('id', 'in', [x.res_id for x in self.env['mail.followers'].search([
+            ('res_model', '=', 'souq.order'),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])])])
+        return myorders.ids
 
 class SouqOrderLine(models.Model):
     _name = 'souq.order.line'

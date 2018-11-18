@@ -331,7 +331,7 @@
       <field name="arch" type="xml">
           <search string="souq_order_search">
               <field name="name" />
-              
+          
           </search>
       </field>
   </record>
@@ -424,7 +424,26 @@
       <!-- <field name="context">{'default_order_id': order_id}</field> -->
 
   </record>
+
+  <record id="action_followed_orders_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Followed orders</field>
+      <field name="res_model">souq.order</field>
+      <field name="view_mode">list</field>
+      <field name="view_type">tree</field>
+      <field name="target">current</field>
+      <!-- <field name="state">code</field> -->
+      <field name="search_view_id" ref="view_souq_order_search"/>
+         
+      <!-- <field name="code">
+        action = self.view_followed_orders()
+       </field> -->
+  </record>
+
+
    <menuitem name="My Orders" id="my_order_menu" parent="menu_souq_order_root" action="action_my_order_act_window"/>
+
+   <menuitem name="Followed Orders" id="followed_orders_menu" parent="menu_souq_order_root" action="action_followed_orders_act_window"/>
 
 
 
