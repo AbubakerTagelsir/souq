@@ -13,17 +13,23 @@
                     <div class="page">
 
                        <center> <h1>Souq Order</h1></center>
+                       <center> <h2><span t-field="o.name"/></h2></center>
                         
                         
-                          <!-- <img class="img img-responsive" src="/sale_order_report/static/src/img/.png" align="right"/> -->
-                          
+                          <!-- <img class="img img-responsive" "src=<span t-field="o.order_pic"/>" align="right"/> -->
+<span t-field="o.order_pic" t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-rounded&quot;}"/>
 
-                        <table style="width:100%">
-                            <tr> 
-                            <td>user name</td>
-                            <td><span t-field="o.name"/></td>
-                             </tr>
-
+                        <table style="width:100%">  
+                        <style>
+                        table, th, td {
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                             }
+                        th, td {
+                            padding: 15px;
+                            text-align: left;
+                              }
+                           </style>  
                             <tr> 
                             <td>payment method</td>
                             <td><span t-field="o.payment_method"/></td>
@@ -45,18 +51,18 @@
                              </tr>
 
                             <tr> 
-                            <td>total price</td>
-                            <td><span t-field="o.total_price"/></td>
+                            <td>number of bookings</td>
+                            <td><span t-field="o.num_booking"/></td>
                             </tr>
 
                             <tr> 
-                            <td>number of bookings</td>
-                            <td><span t-field="o.num_booking"/></td>
+                            <td><b>Total price</b></td>
+                            <td><span t-field="o.total_price"/></td>
                             </tr>
                         
                            
                         </table>
-<!-- <p>Picture of the order <span t-field="o.order_pic"/></p> -->
+
                         
                     </div>
                 </t>
