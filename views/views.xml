@@ -146,7 +146,7 @@
       <field name="view_mode">form</field>
       <field name="view_type">form</field>
       <field name="target">new</field>
-      <!-- <field name="context">{'default_order_id': order_id}</field> -->
+      <field name="context">{'default_order_id': active_id}</field>
       <field name="search_view_id" ref="view_souq_booking_search" />
       <field name="help" type="html">
           <p class="oe_view_nocontent_create">
@@ -209,27 +209,14 @@
                 <t t-name="kanban-box">
                  <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                     <div class="oe_resource_vignette">
-                            <!-- <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('product.template', 'image_small', record.id.raw_value)"/>
-                                </div> -->
-
-                        <!-- <div class="oe_resource_image">
-                            <a type="edit"></a>
-                            <img t-att-src="kanban_image('souq.order', 'image_small', record.id.value)" class="oe_resource_picture"/>
-                        </div> -->
-
-                        <!-- <div class="o_kanban_image">
-                            <t t-if="record.image.raw_value">
-                            <img t-att-src="kanban_image('souq.order', 'image_medium', record.id.raw_value)"/>
-                             </t>
-                        </div> -->
-
+                          <div class="oe_resource_image">
+                            <a type="edit"><img t-att-src="kanban_image('order_pic', 'photo', 'resource_kanban_view')" class="oe_resource_picture"/></a>
+                        </div>
                         <div class="oe_resource_details">
                             <ul>
-                               <!-- <li><field name="order_pic"/></li> -->
                                <li><field name="name"/></li>
                                <li><field name="state"/> </li> 
-                               <!-- <li><field name="total_price"/> </li>   -->
+                               <li><field name="total_price"/> </li>  
                                <!-- <field name='id'/> -->
 
                              </ul>
@@ -237,6 +224,7 @@
                     </div>  
                  </div>                     
                 </t>
+                 
             </templates>
         </kanban>
     </field>
@@ -278,12 +266,17 @@
               </header>
               <sheet>
                   <div class="oe_title">
+                       <div>
                       <label for="name" class="oe_edit_only" />
                       <h1>
                           <field name="name" class="oe_inline"
                               placeholder="Name" />
                       </h1>
+                    </div>
+                    <div>
+                      <field name="order_pic" />
                   </div>
+                </div>
                   <div name="buttons" class="oe_right oe_button_box">
                     <button id="button_id" 
                       name="view_order_bookings"
@@ -344,7 +337,8 @@
       <field name="arch" type="xml">
           <search string="souq_order_search">
               <field name="name" />
-              
+              <filter name="followed_orders_menu" string="Followed Orders" domain="[('message_is_follower', '=', 1)]" />
+          
           </search>
       </field>
   </record>
@@ -432,12 +426,31 @@
       <field name="res_model">souq.order</field>
       <field name="view_mode">list</field>
       <field name="view_type">tree</field>
-      <field name="target">new</field>
+      <field name="target">current</field>
       <field name="domain">[('user_id', '=', uid)]</field>
       <!-- <field name="context">{'default_order_id': order_id}</field> -->
 
   </record>
+
+  <record id="action_followed_orders_act_window" model="ir.actions.act_window">
+      <field name="type">ir.actions.act_window</field>
+      <field name="name">Followed orders</field>
+      <field name="res_model">souq.order</field>
+      <field name="view_mode">kanban,tree,form</field>
+      <field name="view_type">form</field>
+      <field name="target">current</field>
+      <field name="context">{'search_default_followed_orders_menu':1}</field>
+      <field name="search_view_id" ref="view_souq_order_search"/>
+         
+      <!-- <field name="code">
+        action = self.view_followed_orders()
+       </field> -->
+  </record>
+
+
    <menuitem name="My Orders" id="my_order_menu" parent="menu_souq_order_root" action="action_my_order_act_window"/>
+
+   <menuitem name="Followed Orders" id="followed_orders_menu" parent="menu_souq_order_root" action="action_followed_orders_act_window"/>
 
 
 
