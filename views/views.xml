@@ -484,5 +484,7 @@
   </record>
    <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
 
+
+
   </data>
 </odoo>

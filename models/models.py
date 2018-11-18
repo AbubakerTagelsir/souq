@@ -99,7 +99,7 @@ class SouqOrder(models.Model):
         
 
     def view_followed_orders(self, res_id, partner_id, model):
-    	context = cr.execute("select y.res_id from res_partner as x, mail_followers as y where y.partner_id = x.id and y.res_model = 'souq.order';")
+    	# context = cr.execute("select y.res_id from res_partner as x, mail_followers as y where y.partner_id = x.id and y.res_model = 'souq.order';")
     	return {
             'name': 'Followed Orders',
             'type': 'ir.actions.act_window',
@@ -107,7 +107,7 @@ class SouqOrder(models.Model):
             'view_mode': 'kanban,list,form',
             'res_model': 'souq.order',
             'domain': [('user_id', '=', self.user_id)],
-            'context': context,
+            'context': {},
             'target': 'current',
         }
 
@@ -185,3 +185,23 @@ class SaleOrder(models.Model):
     )
 
     delivery = fields.Boolean("Delivery?")
+
+
+# class Partner(models.Model):
+#     _inherit = ['res.partner']
+#     related_user_id = fields.Many2one('res.users', compute="_get_user_id", store=1)
+
+#     def _get_user_id(self):
+#         self.related_user_id = self.env['res.users'].search([
+#             ('partner_id', '=', self.id)
+#         ])
+
+# class User(models.Model):
+    
+#     _inherit = ['res.users']
+
+#     @api.onchange('partner_id')
+#     def check_user_partner_relation(self):
+#         if self.partner_id:
+#             self.partner_id.related_user_id = self.id
+    
