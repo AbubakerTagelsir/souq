@@ -14,10 +14,10 @@ class SouqOrder(models.Model):
         inverse_name='order_id',
     )
     user_id = fields.Many2one('res.users', "Seller", default=lambda self: self.env.user)
+
     payment_method = fields.Selection(
         string='Payment Method',
-        selection=[('cash', 'Cash'), ('bank', 'Bank')]
-    )
+        selection=[('cash', 'Cash'), ('bank', 'Bank')])
 
     delivery = fields.Boolean("Delivery?")
     state = fields.Selection(
@@ -45,9 +45,6 @@ class SouqOrder(models.Model):
         return myorders
      
          
-
-
-
     @api.one
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)
@@ -157,6 +154,7 @@ class OrderBooking(models.Model):
     def confirm_booking(self):
         self.state = 'confirmed'
         self.order_id.state = 'sold'
+        
         new_so = self.env['sale.order'].create({
             'partner_id':self.requester_id.partner_id.id,
             'date_order':fields.Datetime.now(),
