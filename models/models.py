@@ -35,7 +35,9 @@ class SouqOrder(models.Model):
     total_price = fields.Float("Total Price", compute="_get_the_total_price")
     bookings = fields.One2many('souq.booking','order_id')
     num_booking = fields.Integer("Total Bookings", compute="get_the_number_of_bookings")
-    
+    # price_total = fields.Float('Total Price', readonly= True, )
+    orders = fields.One2many('souq.order.line','order_id')
+   
 
     @api.one
     def _get_my_orders(self):
@@ -184,6 +186,50 @@ class SaleOrder(models.Model):
 
     delivery = fields.Boolean("Delivery?")
 
+
+
+class PivotReport(models.Model):
+    _name='pivot.report'
+    """docstring for PivotReport"""
+    order_id = fields.Many2one('souq.order', "Order")
+    user_name = fields.Many2one(related='order_id.user_id')
+    no_of_orders = fields.Integer("Total orders", compute="get_the_number_of_orders")
+    total_price_pivot = fields.Float(related='order_id.total_price')
+    effort_estimate = fields.Integer('Effort Estimate')
+
+
+    # @api.one
+    # def get_the_number_of_orders(self):
+    #     return True
+
+
+    @api.onchange('order_lines')
+    def _get_the_number_of_orders(self): 
+        print(self)   
+        total = 0
+        for line in self.order_lines:
+            total += 1
+        self.no_of_orders = total
+
+    # @api.onchange('orders')
+    # def get_the_number_of_orders(self):
+    #     t = 0
+    #     n_orders = self.env['souq.order'].search([])
+    #     for b in n_orders:
+    #         if b.order_id.id == self.id:
+    #             t +=1
+    #     self.no_orders = t
+    #     return t
+
+
+    # print()
+    # print()
+    # print()
+    # print()        
+    # print('self.no_of_orders')
+    # print()
+    # print()
+    # print()    
 
 # class Partner(models.Model):
 #     _inherit = ['res.partner']

@@ -459,6 +459,19 @@
       </field>
   </record> 
 
+ <!--  <record id="view_poivt_souq" model="ir.ui.view">
+    <field name="arch" type="xml">
+      <pivot>
+        <field name="souq.order" type="col"/>
+        <field name="user_id"/>
+        <field name="effort_estimate" type="measure"/>
+        <field name="date_deadline" interval="week"/>
+      </pivot>
+    </field>
+  </record>
+ -->
+
+
      <!--Main window action for the product-->
   <!-- <record id="action_product_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
@@ -484,6 +497,37 @@
   </record>
    <menuitem name="Profile" id="profile_menu" parent="menu_souq_order_root" action="action_profile_act_window"/>
 
+
+
+  <record id="view_souq_history_report_pivot" model="ir.ui.view">
+<!-- 
+         <field name="name">pivot.report</field> -->
+
+         <field name="model">pivot.report</field>
+
+         <field name="arch" type="xml">
+
+             <pivot string="souq History Analysis">
+
+                <field name="user_name" type="row"/>
+
+                <!-- <field name="user_id" type="row"/> -->
+
+                <field name="effort_estimate" type="measure"/>
+
+                <!-- <field name="date:day" type="row"/> -->
+
+                <field name="no_of_orders" type="col"/>
+
+                <field name="total_price_pivot" type="col"/>
+
+             </pivot>
+
+         </field>
+
+</record>
+ <!--   <menuitem name="Profile" id="report_pivot" parent="menu_souq_order_root" action="view_souq_history_report_pivot"/>
+ -->
 
 
   </data>
