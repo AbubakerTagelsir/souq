@@ -205,27 +205,35 @@
     <field name="arch" type="xml">
     
         <kanban create="1" delete="1" edit="1">>
-            <templates>
-                <t t-name="kanban-box">
-                 <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                    <div class="oe_resource_vignette">
-                          <div class="oe_resource_image">
-                            <a type="edit"><img t-att-src="kanban_image('order_pic', 'photo', 'resource_kanban_view')" class="oe_resource_picture"/></a>
+            <field name="id"/>
+                <field name="order_pic"/>
+                <field name="total_price"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('souq.order', 'order_pic', record.id.raw_value)"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name" />
+                                </strong>
+                                <!-- <div t-if="record.product_variant_count.value &gt; 1" groups="product.group_product_variant">
+                                    <strong>
+                                        <t t-esc="record.product_variant_count.value"/> Variants
+                                    </strong>
+                                </div> -->
+                                <div name="tags"/>
+                                <ul>
+                                    <li>Price: <field name="total_price" widget="monetary"/></li>
+                                    <li>State: <field name="state" widget="statusbar" statusbar_colors='{"draft":"red","available":"blue"}'/></li>
+                                </ul>
+                                <div name="tags"/>
+                            </div>
                         </div>
-                        <div class="oe_resource_details">
-                            <ul>
-                               <li><field name="name"/></li>
-                               <li><field name="state"/> </li> 
-                               <li><field name="total_price"/> </li>  
-                               <!-- <field name='id'/> -->
+                    </t>
+                </templates>
 
-                             </ul>
-                        </div>
-                    </div>  
-                 </div>                     
-                </t>
-                 
-            </templates>
         </kanban>
     </field>
 </record>  
@@ -266,16 +274,21 @@
               </header>
               <sheet>
                   <div class="oe_title">
-                       <div>
+                         <div>
+                                 <field name="order_pic" widget="image" style="width: 120px; height: 120px;" />
+                                <!-- <img t-att-src="kanban_image('souq.order', 'order_pic', record.id.raw_value)"/> -->
+                            </div>
+                            <div>
+                       
                       <label for="name" class="oe_edit_only" />
                       <h1>
-                          <field name="name" class="oe_inline"
+                          <field name="name" class="oe_inline"    
                               placeholder="Name" />
                       </h1>
                     </div>
-                    <div>
+                    <!-- <div>
                       <field name="order_pic" widget="image" />
-                  </div>
+                  </div> -->
                 </div>
                   <div name="buttons" class="oe_right oe_button_box">
                     <button id="button_id" 
@@ -494,8 +507,13 @@
       <field name="view_mode">form</field>
       <field name="view_type">form</field>
       <field name="target">current</field>
+
+      <!-- <field name="res_id">'related_user_id.partner_id.id'</field> -->
+      <!-- <field name="context">{'default_id':related_user_id.partner_id}</field> -->
+
       <field name="domain">[('cc', '=', True)]</field>
       <!-- <field name="res_id" eval="1"></field> -->
+
   </record>
    <menuitem name="My Profile" id="profile_menu" sequence="10" parent="menu_souq_order_root" action="action_profile_act_window"/>
 
