@@ -1,2 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_souq_souq,souq.souq,model_souq_souq,,1,0,0,0
+
+souq_demo_admin, Model user acces,model_souq_souq,souq.group_admin,1,1,1,1
+souq_demo_user, Model user acces,model_souq_souq,souq.group_user,1,1,0,0
+

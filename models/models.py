@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class SouqOrder(models.Model):
     _name = 'souq.order'
     _inherit = 'mail.thread'
-    name = fields.Char("Name", compute="_get_name")
+    name = fields.Char("Name", compute="_get_name", store="True")
     order_lines = fields.One2many(
         string=u'Order Lines',
         comodel_name='souq.order.line',
@@ -32,7 +32,8 @@ class SouqOrder(models.Model):
     related='user_id.phone',
     )
     pickup_location = fields.Char("Pickup Location", help="City - Area - Street")
-    total_price = fields.Float("Total Price", compute="_get_the_total_price")
+    total_price = fields.Float("Total Price", compute="_get_the_total_price", store="True")
+    total_profit = fields.Float("Total Profit", compute="_get_the_total_profit", store="True")
     bookings = fields.One2many('souq.booking','order_id')
     num_booking = fields.Integer("Total Bookings", compute="get_the_number_of_bookings")
     # price_total = fields.Float('Total Price', readonly= True, )
@@ -54,16 +55,33 @@ class SouqOrder(models.Model):
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)
 
-    @api.onchange('order_lines')
+
+    @api.multi
+    @api.depends('order_lines')
     def _get_the_total_price(self): 
         print(self)   
         total = 0.00
-        for line in self.order_lines:
-            total += line.unit_price * line.qty
-        self.total_price = total
+        for i in self:
+            for line in i.order_lines:
+                total += line.unit_price * line.qty
+            i.total_price = total
 
 
-    #NOT WORKING????
+######################################################
+###############
+    @api.depends('order_lines')
+    def _get_the_total_profit(self): 
+        print(self)
+        sold_orders = self.env['souq.order'].search([('state','=','sold')])   
+        total = 0.00
+        for i in sold_orders:
+            for line in i.order_lines:
+                total += line.unit_price * line.qty
+            i.total_profit = total
+###############################################
+
+
+
     @api.onchange('bookings')
     def get_the_number_of_bookings(self):
     	t = 0
@@ -97,19 +115,13 @@ class SouqOrder(models.Model):
         }
         
 
-    def view_followed_orders(self, res_id, partner_id, model):
-    	# context = cr.execute("select y.res_id from res_partner as x, mail_followers as y where y.partner_id = x.id and y.res_model = 'souq.order';")
-    	return {
-            'name': 'Followed Orders',
-            'type': 'ir.actions.act_window',
-            'view_type': 'kanban',
-            'view_mode': 'kanban,list,form',
-            'res_model': 'souq.order',
-            'domain': [('user_id', '=', self.user_id)],
-            'context': {},
-            'target': 'current',
-        }
 
+    # def view_followed_orders(self):
+    #     myorders = self.env['souq.order'].search([('id', 'in', [x.res_id for x in self.env['mail.followers'].search([
+    #         ('res_model', '=', 'souq.order'),
+    #         ('partner_id', '=', self.env.user.partner_id.id),
+    #         ])])])
+    #     return myorders.ids
 
 class SouqOrderLine(models.Model):
     _name = 'souq.order.line'
@@ -189,13 +201,13 @@ class SaleOrder(models.Model):
 
 
 class PivotReport(models.Model):
-    _name='pivot.report'
+    _inherit='souq.order'
     """docstring for PivotReport"""
     order_id = fields.Many2one('souq.order', "Order")
-    user_name = fields.Many2one(related='order_id.user_id')
-    no_of_orders = fields.Integer("Total orders", compute="get_the_number_of_orders")
-    total_price_pivot = fields.Float(related='order_id.total_price')
-    effort_estimate = fields.Integer('Effort Estimate')
+    # no_of_orders = fields.Integer( "no.orders",compute="_get_the_number_of_orders", store=True)
+    # total_profit =
+    # no.bookings =
+    # sold =
 
 
     # @api.one
@@ -203,13 +215,23 @@ class PivotReport(models.Model):
     #     return True
 
 
-    @api.onchange('order_lines')
-    def _get_the_number_of_orders(self): 
-        print(self)   
-        total = 0
-        for line in self.order_lines:
-            total += 1
-        self.no_of_orders = total
+    # @api.onchange('order_lines')
+    # def _get_the_number_of_orders(self):
+
+    #     orders = self.env['souq.order'].search([])
+    #     # slod_orders = self.env['souq.order'].search([('state','=','sold')])
+    #     count = 0
+    #     for order in orders:
+    #         for line in order.order_lines:
+    #             count += 1
+    #     self.no_of_orders = count
+        
+
+        
+        # total = 0
+        # for line in self.order_lines:
+        #     total += 1
+        # self.no_of_orders = total
 
     # @api.onchange('orders')
     # def get_the_number_of_orders(self):
@@ -239,6 +261,24 @@ class PivotReport(models.Model):
 #         self.related_user_id = self.env['res.users'].search([
 #             ('partner_id', '=', self.id)
 #         ])
+
+
+class Partner(models.Model):
+    _inherit = ['res.partner']
+    related_user_id = fields.Many2one('res.partner', default=lambda self: self.env.user.partner_id)
+    cc = fields.Boolean(
+        string=u'cc',
+        default=lambda self: self._get_cc
+    )
+    
+    def _get_user_id(self):
+        self.related_user_id = self.env['res.users'].search([
+            ('partner_id', '=', self.id)
+        ])
+    @api.one
+    def _get_cc(self):
+        if self.id == self.related_user_id:
+            self.cc = True
 
 # class User(models.Model):
     
