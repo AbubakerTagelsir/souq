@@ -253,24 +253,22 @@
               
               <button name="publish_order" string="Publish" type="object" class="oe_highlight"
                 
-                attrs="{ 'invisible':[('state', '!=', 'draft')] }"
-                />
+                attrs="{ 'invisible':[('state', '!=', 'draft')] }"/>
               
-              <button name="cancel_order" string="Cancel" type="object" class="oe_highlight"
+              <button name="s" string="Cancel" type="object" class="oe_highlight"
                 
-                attrs="{ 'invisible':[('state', 'not in', ['available'])] }"
-                />
+                attrs="{ 'invisible':[('state', 'not in', ['available'])] }"/>
               
               <button name="%(action_order_booking_act_window)d"
                       string="Book Order"
                       type="action"
                       default_focus="0"
                       class="oe_highlight"
-                      attrs="{ 'invisible':[('state', 'not in', ['available'])] }"
+                      attrs="{ 'invisible':['|',('state', 'not in', ['available']),('user_id', '=', ['create_uid'])] }"
                       help="Meh" />
               
               <field name="state" widget="statusbar"/>
-              
+               
               </header>
               <sheet>
                   <div class="oe_title">

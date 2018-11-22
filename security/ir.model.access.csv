@@ -1,22 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 
-souq_demo_admin, Model user acces,model_souq_order,souq.group_admin,1,1,1,1
-souq_demo_user, Model user acces,model_souq_order,souq.group_user,1,1,1,1
+access_souq_order,access_souq_order,model_souq_order,group_user,1,1,1,1
+access_souq_orderz,access_souq_orderz,model_souq_order,group_admin,1,0,0,1
 
-access_souq_order,access_souq_order,model_souq_order,souq.group_admin,1,1,1,1
-access_souq_orderz,access_souq_orderz,model_souq_order,souq.group_user,1,1,1,1
+access_souq_order_line_us,access_souq_order_line,model_souq_order_line,group_user,1,1,1,1
+access_souq_order_line_mg,access_souq_order_linez,model_souq_order_line,group_admin,1,0,0,1
 
-access_souq_order_line,access_souq_order_line,model_souq_order_line,souq.group_user,1,1,1,1
-access_souq_order_line,access_souq_order_line,model_souq_order_line,souq.group_admin,1,1,1,1
+access_souq_booking,access_souq_booking,model_souq_booking,group_user,1,0,1,0
+access_souq_bookingz,access_souq_bookingz,model_souq_booking,group_admin,1,0,0,1
 
+saccess_sale_order,access_sale_order,model_sale_order,group_user,1,1,1,0
+access_sale_orderz,access_sale_orderz,model_sale_order,group_admin,1,0,0,1
 
-access_souq_booking,access_souq_booking,model_souq_booking,souq.group_user,1,1,1,1
-access_souq_bookingz,access_souq_bookingz,model_souq_booking,souq.group_admin,1,1,1,1
-
-
-access_sale_order,access_sale_order,model_sale_order,souq.group_user,1,1,1,1
-access_sale_order,access_sale_order,model_sale_order,souq.group_admin,1,1,1,1
-
-access_res_partner,access_res_partner,model_res_partner,souq.group_user,1,1,1,1
-access_res_partnerz,access_res_partnerz,model_res_partner,souq.group_admin,1,1,1,1
+access_res_partner,access_res_partner,model_res_partner,group_user,1,1,1,1
+access_res_partnerz,access_res_partnerz,model_res_partner,group_admin,1,1,1,1
