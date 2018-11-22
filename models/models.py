@@ -23,14 +23,15 @@ class SouqOrder(models.Model):
     )
 
     delivery = fields.Boolean("Delivery?")
+
     state = fields.Selection(
         selection=[('draft', 'Draft'), ('available', 'Available'), ('booked', "Booked"), ('sold', "Sold"), ('canceled', "Canceled")],
         default='draft'
     )
     date = fields.Datetime("Order Date", default=fields.Datetime.now)
     phone = fields.Char("Phone", 
-    related='user_id.phone',
-    )
+    related='user_id.phone',)
+
     pickup_location = fields.Char("Pickup Location", help="City - Area - Street")
     total_price = fields.Float("Total Price", compute="_get_the_total_price")
     bookings = fields.One2many('souq.booking','order_id')
@@ -47,10 +48,6 @@ class SouqOrder(models.Model):
         
         return myorders
      
-         
-
-
-
     @api.one
     def _get_name(self):
         self.name = "SQR-00" + str(self.id)
@@ -82,7 +79,6 @@ class SouqOrder(models.Model):
 
     def cancel_order(self):
         self.state = 'canceled'
-
 
     def view_order_bookings(self):
         
@@ -156,6 +152,7 @@ class OrderBooking(models.Model):
     def confirm_booking(self):
         self.state = 'confirmed'
         self.order_id.state = 'sold'
+        
         new_so = self.env['sale.order'].create({
             'partner_id':self.requester_id.partner_id.id,
             'date_order':fields.Datetime.now(),
