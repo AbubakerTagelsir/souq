@@ -2,22 +2,22 @@
 <odoo>
 	<data>
 
-<record model="ir.module.category" id="souq">
-  <field name="name">Souqs</field>
+<record model="ir.module.category" id="module_management">
+  <field name="name">Demo module access</field>
   <field name="description">User access level for this module</field>
-  <field name="sequence">1</field>
+  <field name="sequence">3</field>
 </record>
 
    <record id="group_user" model="res.groups">
      <field name="name">User</field>
      <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-      <field name="category_id" ref="souq.souq"/>
+      <field name="category_id" ref="souq.module_management"/>
     </record>
 
     <record id="group_admin" model="res.groups">
       <field name="name">Admin</field>
       <field name="implied_ids" eval="[(4, ref('souq.group_user'))]"/>
-      <field name="category_id" ref="souq.souq"/>
+      <field name="category_id" ref="souq.module_management"/>
     </record>
 
     <record id="rule" model="ir.rule">

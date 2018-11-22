@@ -155,14 +155,6 @@
       </field>
   </record>
   
-  
-  <!-- Main menu for "\1\1\1\1\1\1\1\1\1\1\1\1" -->
-  <!-- <record id="menu_" model="ir.ui.menu" >
-      <field name="name">\1\1\1\1\1\1\1\1\1\1\1\1\1</field>
-      <field name="sequence" eval="\1\1" />
-      <field name="action" ref="action_(?2:\ls)(?3:\_)(?2:\lo)(?3:\_)(?2:\lu)(?3:\_)(?2:\lq)(?3:\_)(?2:\l)(?3:\_)(?2:\lb)(?3:\_)(?2:\lo)(?3:\_)(?2:\lo)(?3:\_)(?2:\lk)(?3:\_)(?2:\li)(?3:\_)(?2:\ln)(?3:\_)(?2:\lg)(?3:\_)_act_window" />
-      <field name="parent_id" ref="\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1" />
-  </record> -->
 
 
   <!-- VIEWS: "Souq Order Views"
@@ -190,10 +182,10 @@
               <field name="date" />
               <field name="user_id" />
               <field name="state" />
-  
           </tree>
       </field>
   </record> -->
+
     <!-- the kanban view for Orders -->
 <record model="ir.ui.view" id="resource_kanban_view">
     <field name="name">view.soug.orders.</field>
@@ -229,7 +221,7 @@
     </field>
 </record>  
   
-  <!-- Form view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Form view for orders -->
   <record id="view_souq_order_form" model="ir.ui.view">
       <field name="name">view.souq.order.form</field>
       <field name="model">souq.order</field>
@@ -239,18 +231,13 @@
       <field name="arch" type="xml">
           <form string="souq\_order_form" create="1" delete="1" edit="1">
               <header>
-              
               <field name="state" invisible="1" widget="statusbar"/>
-              
-              <button name="publish_order" string="Publish" type="object" class="oe_highlight"
-                
-                attrs="{ 'invisible':[('state', '!=', 'draft')] }"
-                />
+
+              <button name="publish_order" string="Publish" type="object" class="oe_highlight"    
+                attrs="{ 'invisible':[('state', '!=', 'draft')] }"/>
               
               <button name="cancel_order" string="Cancel" type="object" class="oe_highlight"
-                
-                attrs="{ 'invisible':[('state', 'not in', ['available'])] }"
-                />
+                attrs="{ 'invisible':[('state', 'not in', ['available'])] }"/>
               
               <button name="%(action_order_booking_act_window)d"
                       string="Book Order"
@@ -326,7 +313,7 @@
       </field>
   </record>
   
-  <!-- Search view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Search view for orders -->
   <record id="view_souq_order_search" model="ir.ui.view">
       <field name="name">view.souq.order.search</field>
       <field name="model">souq.order</field>
@@ -342,9 +329,9 @@
       </field>
   </record>
   
-  <!-- Main window action for "\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Main window action for orders -->
   <record id="action_souq_order_act_window" model="ir.actions.act_window">
-      <field name="type">ir.actions.act_window</field>
+      <field name="type">ir.actions.acts_window</field>
       <field name="name">Souq Order</field>
       <field name="res_model">souq.order</field>
       <field name="view_mode">kanban,form</field>
@@ -361,7 +348,7 @@
       </field>
   </record>
   
-  <!-- Main menu for "\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Main menu for Souq and all orders -->
   <record id="menu_souq_order_root" model="ir.ui.menu" >
       <field name="name">Souq</field>
       <field name="action" ref="action_souq_order_act_window" />
@@ -375,8 +362,7 @@
       - Base Addons···: sale    
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   
- 
-  <!-- Form view for "\1\1\1\1\1\1\1\1\1\1" -->
+  <!-- Form view for sale order -->
   <record id="view_sale\_order_form" model="ir.ui.view">
       <field name="name">view.sale.order.form</field>
       <field name="model">sale.order</field>
@@ -429,7 +415,6 @@
       <field name="target">current</field>
       <field name="domain">[('user_id', '=', uid)]</field>
       <!-- <field name="context">{'default_order_id': order_id}</field> -->
-
   </record>
 
   <record id="action_followed_orders_act_window" model="ir.actions.act_window">
@@ -451,11 +436,6 @@
    <menuitem name="My Orders" sequence="30" id="my_order_menu" parent="menu_souq_order_root" action="action_my_order_act_window"/>
 
    <menuitem name="Followed Orders" sequence="40" id="followed_orders_menu" parent="menu_souq_order_root" action="action_followed_orders_act_window"/>
-
-
-
-
-
 
 
   <!-- Tree view for the products -->
@@ -484,7 +464,6 @@
   </record>
  -->
 
-
      <!--Main window action for the product-->
   <!-- <record id="action_product_act_window" model="ir.actions.act_window">
       <field name="type">ir.actions.act_window</field>
@@ -495,7 +474,7 @@
       <field name="target">new</field> -->
      <!-- <field name="context">{'default_order_id': order_id}</field> -->
   <!-- </record> -->
-   <menuitem name="Products" sequence="50" id="product_menu" parent="menu_souq_order_root" action="product.product_template_action"/> 
+    <menuitem name="Products" sequence="50" id="product_menu" parent="menu_souq_order_root" action="product.product_template_action"/> 
 
 
      <!-- Main window action for the profile -->
@@ -553,8 +532,6 @@
       <field name="target">current</field>
     </record>
    <menuitem name="Dynamic Report" id="report_pivot" sequence="10" parent="menu_souq_order_root" action="action_pivot_report_act_window"/>
-
-
 
   </data>
 </odoo>
