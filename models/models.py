@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class SouqOrder(models.Model):
     _name = 'souq.order'
     _inherit = 'mail.thread'
-    name = fields.Char("Name", compute="_get_name", store="True")
+    name = fields.Char("Name", compute="_get_name")
     order_lines = fields.One2many(
         string=u'Order Lines',
         comodel_name='souq.order.line',
@@ -17,29 +17,42 @@ class SouqOrder(models.Model):
     order_pic = fields.Binary("Image" , attachment=True)
 
     user_id = fields.Many2one('res.users', "Seller", default=lambda self: self.env.user)
-
     payment_method = fields.Selection(
         string='Payment Method',
-        selection=[('cash', 'Cash'), ('bank', 'Bank')])
+        selection=[('cash', 'Cash'), ('bank', 'Bank')]
+    )
 
     delivery = fields.Boolean("Delivery?")
-
     state = fields.Selection(
         selection=[('draft', 'Draft'), ('available', 'Available'), ('booked', "Booked"), ('sold', "Sold"), ('canceled', "Canceled")],
         default='draft'
     )
     date = fields.Datetime("Order Date", default=fields.Datetime.now)
     phone = fields.Char("Phone", 
-    related='user_id.phone',)
-
+    related='user_id.phone',
+    )
     pickup_location = fields.Char("Pickup Location", help="City - Area - Street")
-    total_price = fields.Float("Total Price", compute="_get_the_total_price", store="True")
-    total_profit = fields.Float("Total Profit", compute="_get_the_total_profit", store="True")
+    total_price = fields.Float("Total Price", compute="_get_the_total_price")
     bookings = fields.One2many('souq.booking','order_id')
     num_booking = fields.Integer("Total Bookings", compute="get_the_number_of_bookings")
-    # price_total = fields.Float('Total Price', readonly= True, )
-    orders = fields.One2many('souq.order.line','order_id')
-   
+
+
+    logged_in_user = fields.Many2one('res.users',compute="_get_logged_in_user")
+    # comodel_name='res.partner',)
+
+# 'res.users', defualt=lambda self:self.env.uid
+    
+    @api.one
+    def _get_logged_in_user(self):
+        self.logged_in_user = self.env.user.id
+
+    #     self.logged_in_user = self.env.search([
+    #     ('user_id', '=', self.id)])
+
+        # self.logged_in_user = self.env.user.id
+        # self.logged_in_user = self._uid
+    
+
 
     @api.one
     def _get_my_orders(self):
@@ -50,7 +63,7 @@ class SouqOrder(models.Model):
                 myorders.append(order)
         
         return myorders
-     
+              
 
     @api.one
     def _get_name(self):
@@ -58,7 +71,7 @@ class SouqOrder(models.Model):
 
 
     @api.multi
-    @api.depends('order_lines')
+    @api.onchange('order_lines')
     def _get_the_total_price(self): 
         print(self)   
         total = 0.00
@@ -66,21 +79,6 @@ class SouqOrder(models.Model):
             for line in i.order_lines:
                 total += line.unit_price * line.qty
             i.total_price = total
-
-
-######################################################
-###############
-    @api.depends('order_lines')
-    def _get_the_total_profit(self): 
-        print(self)
-        sold_orders = self.env['souq.order'].search([('state','=','sold')])   
-        total = 0.00
-        for i in sold_orders:
-            for line in i.order_lines:
-                total += line.unit_price * line.qty
-            i.total_profit = total
-###############################################
-
 
 
     @api.onchange('bookings')
@@ -98,6 +96,7 @@ class SouqOrder(models.Model):
 
     def cancel_order(self):
         self.state = 'canceled'
+
 
     def view_order_bookings(self):
         
@@ -148,6 +147,13 @@ class OrderBooking(models.Model):
     notes = fields.Text("Notes")
     requester_location = fields.Char("Requester Location")
 
+
+    @api.depends()
+    def _set_booking_invisable(self):
+        for rec in self:
+            rec.current_user = self.env.user
+            set('invisible', "1")
+
     @api.one
     def _get_name(self):
         self.name = "ORB-00" + str(self.id)
@@ -171,7 +177,6 @@ class OrderBooking(models.Model):
     def confirm_booking(self):
         self.state = 'confirmed'
         self.order_id.state = 'sold'
-        
         new_so = self.env['sale.order'].create({
             'partner_id':self.requester_id.partner_id.id,
             'date_order':fields.Datetime.now(),
@@ -197,70 +202,6 @@ class SaleOrder(models.Model):
     )
 
     delivery = fields.Boolean("Delivery?")
-
-
-
-class PivotReport(models.Model):
-    _inherit='souq.order'
-    """docstring for PivotReport"""
-    order_id = fields.Many2one('souq.order', "Order")
-    # no_of_orders = fields.Integer( "no.orders",compute="_get_the_number_of_orders", store=True)
-    # total_profit =
-    # no.bookings =
-    # sold =
-
-
-    # @api.one
-    # def get_the_number_of_orders(self):
-    #     return True
-
-
-    # @api.onchange('order_lines')
-    # def _get_the_number_of_orders(self):
-
-    #     orders = self.env['souq.order'].search([])
-    #     # slod_orders = self.env['souq.order'].search([('state','=','sold')])
-    #     count = 0
-    #     for order in orders:
-    #         for line in order.order_lines:
-    #             count += 1
-    #     self.no_of_orders = count
-        
-
-        
-        # total = 0
-        # for line in self.order_lines:
-        #     total += 1
-        # self.no_of_orders = total
-
-    # @api.onchange('orders')
-    # def get_the_number_of_orders(self):
-    #     t = 0
-    #     n_orders = self.env['souq.order'].search([])
-    #     for b in n_orders:
-    #         if b.order_id.id == self.id:
-    #             t +=1
-    #     self.no_orders = t
-    #     return t
-
-
-    # print()
-    # print()
-    # print()
-    # print()        
-    # print('self.no_of_orders')
-    # print()
-    # print()
-    # print()    
-
-# class Partner(models.Model):
-#     _inherit = ['res.partner']
-#     related_user_id = fields.Many2one('res.users', compute="_get_user_id", store=1)
-
-#     def _get_user_id(self):
-#         self.related_user_id = self.env['res.users'].search([
-#             ('partner_id', '=', self.id)
-#         ])
 
 
 class Partner(models.Model):

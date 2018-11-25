@@ -18,7 +18,7 @@
                         
                           <!-- <img class="img img-responsive" "src=<span t-field="o.order_pic"/>" align="right"/> -->
 <span t-field="o.order_pic" t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-rounded&quot;}"/>
-                      
+
                         <table style="width:100%">  
                         <style>
                         table, th, td {
